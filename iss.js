@@ -26,9 +26,9 @@ const fetchMyIP = function(callback) {
 };
 
 
-fetchMyIP((err, ip) => {
-  err ? console.log("It didn't work!", err) : console.log('It worked! Returned IP: ', ip);
-});
+// fetchMyIP((err, ip) => {
+//   err ? console.log("It didn't work!", err) : console.log('It worked! Returned IP: ', ip);
+// });
 
 
 module.exports = { fetchMyIP };

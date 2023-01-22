@@ -1,7 +1,12 @@
 
-
-
 const { fetchMyIP } = require('./iss');
+
+
+fetchMyIP((err, ip) => {
+  err ? console.log("It didn't work!", err) : console.log('It worked! Returned IP: ', ip);
+});
+
+
 
 // fetchMyIP((error, ip) => {
 //   if (error) {
@@ -12,6 +17,5 @@ const { fetchMyIP } = require('./iss');
 //   console.log('It worked! Returned IP:' , ip);
 // });
 
-fetchMyIP();
 
 // https://api.ipify.org?format=json
