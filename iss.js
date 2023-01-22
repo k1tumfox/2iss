@@ -9,23 +9,26 @@ const axios = require('axios');
  */
 
 
-const fetchMyIP = function(retrieve) { 
-  // use request to fetch IP address from JSON API
+const fetchMyIP = function(callback) { 
   axios.get('https://api.ipify.org?format=json')
     .then(res => {
-      // console.log(res.data);
-      res.data && console.log(`IP: ${res.data.ip}`);
+      if (res.status !== 200) {
+        return callback(Error(`Status Code ${res.status} when fetching IP: ${res.data}`), null);
+      } else {
+        return callback(null, res.data.ip);
+      }
     })
     .catch(err => {
-      console.log("Error: ", err);
-    });
+      return callback(err, null);
+    })
 
 
 };
 
-fetchMyIP();
 
-
+fetchMyIP((err, ip) => {
+  err ? console.log("It didn't work!", err) : console.log('It worked! Returned IP: ', ip);
+});
 
 
 module.exports = { fetchMyIP };
