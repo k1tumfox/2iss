@@ -9,7 +9,7 @@ const axios = require('axios');
  */
 
 
-const fetchMyIP = function(callback) { 
+const fetchMyIP = (callback) => { 
   axios.get('https://api.ipify.org?format=json')
     .then(res => {
       if (res.status !== 200) {
@@ -20,9 +20,7 @@ const fetchMyIP = function(callback) {
     })
     .catch(err => {
       return callback(err, null);
-    })
-
-
+    });
 };
 
 
@@ -31,4 +29,60 @@ const fetchMyIP = function(callback) {
 // });
 
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = (ip, callback) => {
+  axios.get(`http://ipwho.is/${ip}`)
+    .then(res => {
+      if (!res.data.success) {
+        return callback(Error(`${res.data.message}: ${res.data.ip}`), null);
+      } else {
+        const { latitude, longitude } = res.data;
+        // const coords = {
+        //   latitude: res.data.latitude,
+        //   longitude: res.data.longitude
+        // };
+        return callback(null, { latitude, longitude }); 
+      }
+    })
+    .catch(err => {
+      return callback(err, null);
+    });
+};
+
+
+const fetchIssTimes = (coords, callback) => {
+  const { latitude, longitude } = coords;
+  axios.get(`https://iss-flyover.herokuapp.com/json/?lat=${latitude}&lon=${longitude}`)
+    .then(res => {
+      if (res.data.message !== 'success') {
+        return callback(Error(`Error occurred: ${res.data.message}`), null);
+      } else {
+        return callback(null, res.data.response);
+      }
+    })
+    .catch(err => {
+      return callback(err, null);
+    });
+};
+
+
+
+const nextISSTimesForMyLocation = function(callback) {
+  fetchMyIP((err, ip) => {
+    if (err) {
+      return callback(err, null);
+    } 
+    fetchCoordsByIP(ip, (err, location) => {
+      err && callback(err, null);
+      fetchIssTimes(location, (err, nextPasses) => {
+        err && callback(err, null);
+        callback(null, nextPasses);
+      });
+    });
+  });
+};
+
+
+
+
+
+module.exports = { nextISSTimesForMyLocation };
