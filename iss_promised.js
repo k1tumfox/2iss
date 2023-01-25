@@ -23,9 +23,7 @@ const axios = require('axios');
 //     });
 // };
 
-const fetchMyIP = function() {
-  return axios.get('https://api.ipify.org?format=json');
-};
+
 
 // fetchMyIP((err, ip) => {
 //   err ? console.log("It didn't work!", err) : console.log('It worked! Returned IP: ', ip);
@@ -39,10 +37,6 @@ const fetchMyIP = function() {
 //         return callback(Error(`${res.data.message}: ${res.data.ip}`), null);
 //       } else {
 //         const { latitude, longitude } = res.data;
-//         // const coords = {
-//         //   latitude: res.data.latitude,
-//         //   longitude: res.data.longitude
-//         // };
 //         return callback(null, { latitude, longitude }); 
 //       }
 //     })
@@ -50,6 +44,14 @@ const fetchMyIP = function() {
 //       return callback(err, null);
 //     });
 // };
+const fetchMyIP = function() {
+  return axios.get('https://api.ipify.org?format=json');
+};
+
+const fetchCoordsByIP = function(body) {
+  // console.log("fed into axios: ", body.data.ip);
+  return axios.get(`http://ipwho.is/${body.data.ip}`);
+};
 
 
 // const fetchIssTimes = (coords, callback) => {
@@ -87,5 +89,5 @@ const fetchMyIP = function() {
 
 
 
-module.exports = { fetchMyIP };
+module.exports = { fetchMyIP, fetchCoordsByIP };
 // module.exports = { fetchMyIP, fetchCoordsByIP, fetchIssTimes, nextISSTimesForMyLocation };

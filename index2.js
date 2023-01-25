@@ -16,8 +16,12 @@ const { fetchMyIP, fetchCoordsByIP, fetchIssTimes, nextISSTimesForMyLocation } =
 
 
 fetchMyIP()
-  .then(body => console.log(body.data.ip));
-
+  .then(fetchCoordsByIP)
+  .then(body => {
+    // console.log("fetchCoords gives: ", body);
+    const { latitude, longitude } = body.data;
+    console.log({ latitude, longitude });
+  })
 
 
 // const printPassTimes = function(passTimes) {
