@@ -44,14 +44,8 @@ const axios = require('axios');
 //       return callback(err, null);
 //     });
 // };
-const fetchMyIP = function() {
-  return axios.get('https://api.ipify.org?format=json');
-};
 
-const fetchCoordsByIP = function(body) {
-  // console.log("fed into axios: ", body.data.ip);
-  return axios.get(`http://ipwho.is/${body.data.ip}`);
-};
+
 
 
 // const fetchIssTimes = (coords, callback) => {
@@ -68,6 +62,31 @@ const fetchCoordsByIP = function(body) {
 //       return callback(err, null);
 //     });
 // };
+
+const fetchMyIP = function() {
+  return axios.get('https://api.ipify.org?format=json');
+};
+
+const fetchCoordsByIP = function(body) {
+  // console.log("fed into axios: ", body.data.ip);
+  return axios.get(`http://ipwho.is/${body.data.ip}`);
+};
+
+const fetchIssTimes = function(coords) {
+  const { latitude, longitude } = coords.data;
+  // console.log({ latitude, longitude });
+  return axios.get(`https://iss-flyover.herokuapp.com/json/?lat=${latitude}&lon=${longitude}`);
+};
+
+const nextISSTimesForMyLocation = function() {
+  return fetchMyIP()
+    .then(fetchCoordsByIP)
+    .then(fetchIssTimes)
+    .then(body => {
+    // console.log("fetchCoords gives: ", body);
+    return body.data.response;
+  });
+};
 
 
 
@@ -89,5 +108,5 @@ const fetchCoordsByIP = function(body) {
 
 
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
-// module.exports = { fetchMyIP, fetchCoordsByIP, fetchIssTimes, nextISSTimesForMyLocation };
+// module.exports = { fetchMyIP, fetchCoordsByIP, fetchIssTimes };
+module.exports = { nextISSTimesForMyLocation };
